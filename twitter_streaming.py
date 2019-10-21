@@ -49,7 +49,9 @@ class StdOutListener(StreamListener):
 
 if __name__ == '__main__':
     # Authenticate using config.py and connect to Twitter Streaming API.
-    hash_tag_list = ["donal trump", "hillary clinton", "barack obama", "bernie sanders"]
+    #hash_tag_list = ["donal trump", "hillary clinton", "barack obama", "bernie sanders"]
+    hash_tag_list = ["Bernie sanders","Joe biden","Elizabeth Warren"]
+    #hash_tag_list_2 = ["Tulsi Gabbard","Kamala Harris","Andrew Yang"]
     fetched_tweets_filename = "json/tweets.json"
 
     twitter_streamer = TwitterStreamer()
