@@ -52,6 +52,7 @@ text_data = []
 with open('dataset.csv') as f:
     for line in f:
         tokens = prepare_text_for_lda(line)
+        # Need to change this condition for our Use Case
         number = random.random()
         if number > .99:
             print(tokens)
