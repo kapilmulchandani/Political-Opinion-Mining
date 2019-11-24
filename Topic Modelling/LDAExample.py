@@ -55,6 +55,22 @@ with open('dataset.csv') as f:
         # Need to change this condition for our Use Case
         number = random.random()
         if number > .99:
-            print(tokens)
+            # print(tokens)
             text_data.append(tokens)
-print()
+
+
+from gensim import corpora
+dictionary = corpora.Dictionary(text_data)
+corpus = [dictionary.doc2bow(text) for text in text_data]
+
+import pickle
+pickle.dump(corpus, open('corpus.pkl', 'wb'))
+dictionary.save('dictionary.gensim')
+
+import gensim
+NUM_TOPICS = 5
+ldamodel = gensim.models.ldamodel.LdaModel(corpus, num_topics = NUM_TOPICS, id2word=dictionary, passes=15)
+ldamodel.save('model5.gensim')
+topics = ldamodel.print_topics(num_words=4)
+for topic in topics:
+    print(topic)
