@@ -60,7 +60,7 @@ def get_tweets(kwds, output_file, limit=100000, lang='en', until=None,
         count=count,
         lang=lang,
         geocode=geo,
-        max_id=max_id
+        since_id=max_id
     )
     with open(output_file, 'a', encoding='utf-8-sig', newline='') as csvFile:
         csvWriter = csv.writer(csvFile)
