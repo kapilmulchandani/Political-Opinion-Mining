@@ -1,1 +1,0 @@
-# Political opinion mining
