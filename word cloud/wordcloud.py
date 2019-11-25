@@ -5,13 +5,25 @@ import nltk
 import string
 from nltk.corpus import stopwords
 # nltk.download('stopwords')
-stop_words = set(stopwords.words('english'))
+stop_words = list(set(stopwords.words('english')))
+
+# list of all candidates to be removed from the tweets
+candidates = ["bernie", "berni", "sanders", "sander", "joe", "biden", "elizabeth", "warren", "donald", "trump", "mayor", "pete",
+                        "buttigieg", "kamala", "harris", "andrew", "yang", "tulsi", "gabbard"]
 
 # words that can be considered for removal in pre-processing
-add_stopwords = ['s', 'userhandle', 'user', 'u', 'a', 'amp', 'presidential', '2020', 'democratic']
+add_stopwords = ['s', 'userhandle', 'user', 'u', 'a', 'amp', 'presidential', '2020', 'democratic', 'president',
+                 'democrat', 'us']
+
+stop_words.extend(add_stopwords)
+stop_words.extend(candidates)
 
 
 def lemma(tweet):
+    # removal of punctuations
+    tweet = re.sub(r'[^\w\s]', '', tweet)
+    # print(tweet)
+
     # removal of stopwords
     words = [word
              for word in tweet.split()
@@ -20,8 +32,6 @@ def lemma(tweet):
     # print(words)
     tweet_stem = ' '.join(words)
 
-    # removal proposals
-    tweet_stem = re.sub(r'[^\w\s]', '', tweet_stem)
     # print(tweet_stem)
     return tweet_stem + " "
 
@@ -68,20 +78,16 @@ for name in candidate_names:
     data = pd.read_csv(filename, header=None, index_col=0)
     d = [lemma(preprocess(tweet)) for tweet in data[5]] # data[column] where column => column containing tweets
 
-    # list of all candidates to be removed from the tweets
-    candidates_names = ["bernie", "berni", "sanders", "sander", "joe", "biden", "elizabeth", "warren", "donald", "trump", "mayor", "pete",
-                        "buttigieg", "kamala", "harris", "andrew", "yang", "tulsi", "gabbard"]
-    str = ''
-    d = str.join(d)
-    for i in candidates_names:
-        d = d.replace(i, '')
+    d = ''.join(d)
 
-    # removal of punctuations
+    # removal of punctuations and converting to single string
     d = re.sub(r'[^\w\s]', '', d)
 
     # Convert string to series
     series = pd.Series(d.split())
-    print(series)
-    # series.to_csv(words_file)
+    # print(series)
+    df = pd.DataFrame(series.value_counts()).reset_index()
+    print(df)
+    df.to_csv(words_file)
 
 
