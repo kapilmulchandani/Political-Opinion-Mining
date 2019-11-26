@@ -10,6 +10,7 @@ from sklearn import metrics
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import roc_curve
 from sklearn.model_selection import train_test_split
 
 
@@ -23,6 +24,15 @@ def load_train_data():
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20, random_state=5)
     return X_train, y_train, X_test, y_test
 
+
+def load_train_data_2():
+    dataset = pd.read_excel('../newTraining.xlsx')
+    dataset = dataset[['sentiment', 'text']].dropna()
+    X = dataset.iloc[:, 1].values
+    X = pd.Series(X)
+    y = dataset.iloc[:, 0].values
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20, random_state=5)
+    return X_train, y_train, X_test, y_test
 
 def preprocess(tweet):
     # Convert www.* or https?://* to URL
@@ -75,6 +85,10 @@ def evaluate(y_pred, y_true):
     return metrics.accuracy_score(y_true, y_pred)
 
 
+def confusion_matrix(y_pred, y_test):
+    return metrics.confusion_matrix(y_test, y_pred)
+
+
 def pickle_model(model, fname):
     pickle.dump(model, open(fname, 'wb'))
 
@@ -87,10 +101,13 @@ def predict(model, X):
     return model.predict(X)
 
 
+def roc(y_test, y_score):
+    return roc_curve(y_test, y_score, pos_label=0)
+
 # Logistic Regression
 
-def train_lr(X_train, y_train):
-    model = LogisticRegression()
+def train_lr(X_train, y_train, **kwargs):
+    model = LogisticRegression(**kwargs)
     model.fit(X_train, y_train)
     return model
 
